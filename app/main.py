@@ -25,6 +25,7 @@ from .routes import (
     triage,
     photos,
     triage_reports,
+    payments,
 )
 
 
@@ -220,6 +221,7 @@ def create_app():
         triage.router,
         photos.router,
         triage_reports.router,
+        payments.router,
     ):
         app.include_router(router, prefix="/api")
 
