@@ -31,6 +31,11 @@ class Settings:
     ai_daily_limit: int = int(os.getenv("AI_DAILY_LIMIT", "100"))
     ai_concurrency: int = int(os.getenv("AI_CONCURRENCY", "2"))
     public_signup: bool = os.getenv("PUBLIC_SIGNUP_ENABLED", "true").lower() == "true"
+    paymongo_test_enabled: bool = os.getenv("PAYMONGO_TEST_ENABLED", "false").lower() == "true"
+    paymongo_test_key: str = os.getenv("PAYMONGO_TEST_SECRET_KEY", "")
+    paymongo_test_webhook_secret: str = os.getenv("PAYMONGO_TEST_WEBHOOK_SECRET", "")
+    payment_return_url: str = os.getenv("PAYMENT_RETURN_URL", "https://pulsecollective-care.vercel.app/")
+    paymongo_test_methods: tuple[str, ...] = csv("PAYMONGO_TEST_METHODS", "qrph")
 
 
 settings = Settings()
