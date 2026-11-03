@@ -44,7 +44,22 @@ class Patient(Model):
     def valid_dob(cls, v):
         if v and v > date.today():
             raise ValueError("Date of birth cannot be in the future")
+        if v and v.year < date.today().year - 130:
+            raise ValueError("Check the year in your date of birth")
         return v
+
+    @field_validator("phone", "emergency_contact_phone")
+    @classmethod
+    def valid_phone(cls, value):
+        import re
+
+        if not value or not value.strip():
+            return None
+        value = value.strip()
+        digits = re.sub(r"[^0-9]", "", value)
+        if not re.fullmatch(r"\+?[0-9\s().-]+", value) or not 7 <= len(digits) <= 15:
+            raise ValueError("Enter a valid phone number")
+        return value
 
 
 class Doctor(Model):
@@ -216,6 +231,7 @@ class PatientAccount(Model):
     phone: Annotated[str, Field(max_length=30)] | None = None
     address: Annotated[str, Field(max_length=500)] | None = None
     _dob = field_validator("date_of_birth")(Patient.valid_dob.__func__)
+    _phone = field_validator("phone")(Patient.valid_phone.__func__)
 
     @field_validator("full_name")
     @classmethod
